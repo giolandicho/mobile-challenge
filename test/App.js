@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 
 export default function App() {
 
   const [data, setData] = useState({});
+  const [users, setUsers] = useState([]);
   const [page, setPage] = useState(0);
   const fetchData = () =>{
     const nextPage = page + 1;
@@ -15,13 +16,25 @@ export default function App() {
   useEffect(() => {
     fetchData().then((res) => {
       const page = res.data;
-      console.log(page.entries)
-    });
+      setData(page);
+      setUsers(page.entries)
+    }).catch(e => console.log(e));
   }, [])
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+      <ScrollView>
+        {data && users && users.map((user, i) => {
+          return(
+            <View key={i}>
+              <Text>
+                {user.name.firstName}{user.name.lastName}
+              </Text>
+            </View>
+          )
+        })}
+      </ScrollView>
     </View>
   );
 }
