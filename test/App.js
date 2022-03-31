@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Button } from 'react-native';
+import Student from './components/Student';
 
 export default function App() {
 
@@ -24,14 +25,19 @@ export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <ScrollView>
+      <View style={styles.headerBar}/>
+      <Button title='Log' onPress={() => {console.log(data, users)}}/>
+      <ScrollView style={styles.scrollContainer}>
         {data && users && users.map((user, i) => {
+          const name = user.name.firstName + ' ' + user.name.lastName
           return(
-            <View key={i}>
-              <Text>
-                {user.name.firstName}{user.name.lastName}
-              </Text>
-            </View>
+            <Student
+              key={i}
+              name={name}
+              email={user.email}
+              gender={user.gender}
+              id={user.id}
+              />
           )
         })}
       </ScrollView>
@@ -43,7 +49,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    width:'100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  scrollContainer: {
+    width: '100%'
+  },
+  headerBar:{
+    height:20,
+  }
 });
