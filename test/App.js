@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, Button } from 'react-native';
+import { StyleSheet, View, ScrollView, Button } from 'react-native';
 import Student from './components/Student';
 
 export default function App() {

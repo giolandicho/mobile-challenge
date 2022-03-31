@@ -1,12 +1,29 @@
-import {View, Text, StyleSheet } from "react-native";
+import { useState } from 'react';
+import {View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const Student = ({name, email, gender, id}) => {
+    const [pressed, setPressed] = useState(false);
+
+    const handlePress = () => {
+        if(!pressed){
+            setPressed(true);
+        }
+        else{
+            setPressed(false);
+        }
+    }
+
     return(
         <View style={styles.studentCard}>
-            <Text>Name: {name}</Text>
-            <Text> Student ID: {id} </Text>
-            <Text>Email address: {email} </Text>
-            <Text>Gender: {gender} </Text>
+            <TouchableOpacity onPress={handlePress}>
+                <Text>{name}</Text>
+            </TouchableOpacity>
+            {pressed && 
+            <View style={styles.infoContainer}>
+                <Text>{id}</Text>
+                <Text>{email}</Text>
+                <Text> {gender}</Text>
+            </View>}
         </View>
     )
 }
@@ -16,11 +33,15 @@ const styles = StyleSheet.create({
         marginTop:10,
         paddingBottom: 10,
         display: 'flex',
-        flexDirection:'row',
         flexWrap: 'wrap',
+        justifyContent:'space-around',
+        alignSelf:'center',
+    },
+    infoContainer:{
+        marginTop:5,
+        display: 'flex',
         justifyContent:'space-between',
         alignItems:'center',
-        borderBottomWidth: 1, 
     }
 })
 
