@@ -11,6 +11,7 @@ export default function App() {
   const [page, setPage] = useState(0);
   const list = useRef(null)
 
+  //Function for making GET requests using Axios and uses response to set state
   const fetchData = async() =>{
     setLoading(true);
     const nextPage = page + 1;
@@ -33,9 +34,13 @@ export default function App() {
       </View>
     )
   }
+
+  //Resets user view to top of list
   const resetIndex = () => {
     list.current.scrollToIndex({animated: true, index: 0})
   }
+
+
   const getNextPage = () => {
     fetchData().then(resetIndex());
   }
@@ -52,7 +57,7 @@ export default function App() {
   }
 
 
-
+  //Fetch data when component mounts
   useEffect(() => {
     fetchData()
   }, [])

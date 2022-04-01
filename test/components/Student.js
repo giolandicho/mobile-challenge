@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import {View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
+//Component for each individual student
+
 const Student = ({name, email, gender, id}) => {
     const [pressed, setPressed] = useState(false);
 
