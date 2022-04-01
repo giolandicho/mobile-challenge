@@ -1,62 +1,93 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, ScrollView, Button } from 'react-native';
+import { StyleSheet, View, Button, FlatList, Text } from 'react-native';
 import Student from './components/Student';
 
 export default function App() {
 
-  const [data, setData] = useState({});
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
-  const fetchData = () =>{
+  const list = useRef(null)
+
+  const fetchData = async() =>{
+    setLoading(true);
     const nextPage = page + 1;
-    return axios.get(`https://my.api.mockaroo.com/users.json?page=${nextPage}&key=930279b0`);
+    const url = `https://my.api.mockaroo.com/users.json?page=${nextPage}&count=20&key=930279b0`
+    setPage(nextPage)
+    return await axios
+      .get(url)
+      .then((res) => {
+        const userData = res.data;
+        setUsers(userData.entries)
+        setLoading(false);
+        }).catch(e => console.log(e));
   }
 
+  const renderItem = ({item}) => {
+    const fullName = item.name.firstName + ' ' + item.name.lastName
+    return(
+      <View style={styles.studentContainer}>
+        <Student name={fullName} email={item.email} gender={item.gender} id={item.id}/>
+      </View>
+    )
+  }
+  const resetIndex = () => {
+    list.current.scrollToIndex({animated: true, index: 0})
+  }
+  const getNextPage = () => {
+    fetchData().then(resetIndex());
+  }
+
+  const nextPageButton = () => {
+    return(
+      <View styles={styles.buttonContainer}>
+        <Button 
+          onPress={getNextPage}
+          title='Next Page'
+        />
+      </View>
+    )
+  }
+
+
+
   useEffect(() => {
-    fetchData().then((res) => {
-      const page = res.data;
-      setData(page);
-      setUsers(page.entries)
-    }).catch(e => console.log(e));
+    fetchData()
   }, [])
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <View style={styles.headerBar}/>
-      <Button title='Log' onPress={() => {console.log(data, users)}}/>
-      <ScrollView style={styles.scrollContainer}>
-        {data && users && users.map((user, i) => {
-          const name = user.name.firstName + ' ' + user.name.lastName
-          return(
-            <Student
-              key={i}
-              name={name}
-              email={user.email}
-              gender={user.gender}
-              id={user.id}
-              />
-          )
-        })}
-      </ScrollView>
+      {loading ? <Text>Loading...</Text> : users && <FlatList
+          ref={list}
+          data={users}
+          renderItem={renderItem}
+          ListFooterComponent={nextPageButton}
+          extraData={users}
+          keyExtractor={(item) => item.id}
+        />}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#e6e6e6',
     width:'100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  scrollContainer: {
-    width: '100%'
+  studentContainer: {
+    width: '100%',
+    marginBottom:10,
   },
   headerBar:{
     height:20,
+  }, 
+  buttonContainer:{
+    paddingBottom:20,
   }
 });

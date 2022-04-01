@@ -16,13 +16,13 @@ const Student = ({name, email, gender, id}) => {
     return(
         <View style={styles.studentCard}>
             <TouchableOpacity onPress={handlePress}>
-                <Text>{name}</Text>
+                <Text style={styles.studentName}>{name}</Text>
             </TouchableOpacity>
             {pressed && 
             <View style={styles.infoContainer}>
-                <Text>{id}</Text>
-                <Text>{email}</Text>
-                <Text> {gender}</Text>
+                <Text style={styles.studentInfo}>Student ID: {id}</Text>
+                <Text style={styles.studentInfo}>Email address: {email}</Text>
+                <Text style={styles.studentInfo}>Gender: {gender}</Text>
             </View>}
         </View>
     )
@@ -30,18 +30,31 @@ const Student = ({name, email, gender, id}) => {
 
 const styles = StyleSheet.create({
     studentCard: {
-        marginTop:10,
+        flex: 1,
+        marginTop:15,
         paddingBottom: 10,
+        paddingTop:10,
         display: 'flex',
+        width:'80%',
+        flexDirection:'row',
         flexWrap: 'wrap',
         justifyContent:'space-around',
+        alignItems:'center',
         alignSelf:'center',
+        borderRadius:5,
+        backgroundColor:'#fff'
     },
     infoContainer:{
         marginTop:5,
         display: 'flex',
         justifyContent:'space-between',
         alignItems:'center',
+    },
+    studentName:{
+        fontSize:35
+    },
+    studentInfo:{
+        fontSize:15,
     }
 })
 
